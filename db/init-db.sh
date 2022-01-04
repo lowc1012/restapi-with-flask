@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Create Database, User
+mysql -uroot -p"${MYSQL_ROOT_PASSWORD}" <<EOF
+ALTER DATABASE ${MYSQL_DATABASE} CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin;
+use ${MYSQL_DATABASE};
+source schema.sql;
+
+CREATE DATABASE ${TEST_MYSQL_DATABASE} DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+CREATE USER '${TEST_MYSQL_USER}'@'%' IDENTIFIED BY '${TEST_MYSQL_PASSWORD}';
+GRANT ALL PRIVILEGES ON ${TEST_MYSQL_DATABASE}.* TO '${TEST_MYSQL_USER}'@'%';
+use ${TEST_MYSQL_DATABASE};
+source schema.sql;
+source fake-data.sql;
+EOF
